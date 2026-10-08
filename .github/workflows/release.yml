@@ -1,0 +1,46 @@
+name: Create Release on Tag Push
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 11
+
+      - name: Install Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # 仓库不跟踪 pnpm-lock.yaml，因此不使用 frozen-lockfile 与依赖缓存
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Type check
+        run: pnpm typecheck
+
+      - name: Test
+        run: pnpm test
+
+      # 这一步会生成 package.zip
+      - name: Build for production
+        run: pnpm build
+
+      - name: Release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifactErrorsFailBuild: true
+          artifacts: "package.zip"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          prerelease: false

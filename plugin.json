@@ -1,0 +1,38 @@
+{
+  "name": "siyuan-lineglow",
+  "author": "Talyra42",
+  "url": "https://github.com/Talyra42/siyuan-lineglow",
+  "version": "1.0.0",
+  "minAppVersion": "2.10.14",
+  "disabledInPublish": false,
+  "backends": [
+    "all"
+  ],
+  "frontends": [
+    "all"
+  ],
+  "displayName": {
+    "default": "Line Glow",
+    "zh_CN": "代码块行高亮"
+  },
+  "description": {
+    "default": "Highlight the specified lines of a code block, using the VitePress style line range syntax",
+    "zh_CN": "按照 VitePress 的行区间语法高亮代码块中指定的行"
+  },
+  "readme": {
+    "default": "README.md",
+    "zh_CN": "README.zh-CN.md"
+  },
+  "icon": "icon.png",
+  "preview": "preview.png",
+  "funding": {
+    "custom": []
+  },
+  "keywords": [
+    "code",
+    "highlight",
+    "line",
+    "代码块",
+    "行高亮"
+  ]
+}
