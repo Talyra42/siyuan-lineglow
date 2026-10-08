@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160" role="img" aria-label="Line Glow">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0.55" y2="1">
+      <stop offset="0" stop-color="#3a53a0"/>
+      <stop offset="1" stop-color="#141a2e"/>
+    </linearGradient>
+    <linearGradient id="band" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#8fb4ff" stop-opacity="0.72"/>
+      <stop offset="1" stop-color="#6f9dff" stop-opacity="0.26"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="160" height="160" rx="34" fill="url(#bg)"/>
+
+  <!-- 高亮行的整行背景 -->
+  <rect x="16" y="51" width="128" height="18" rx="5" fill="url(#band)"/>
+  <rect x="16" y="93" width="128" height="18" rx="5" fill="url(#band)"/>
+
+  <!-- 行号 -->
+  <g fill="#ffffff" fill-opacity="0.32">
+    <rect x="30" y="34" width="7" height="9" rx="3.5"/>
+    <rect x="30" y="76" width="7" height="9" rx="3.5"/>
+    <rect x="30" y="118" width="7" height="9" rx="3.5"/>
+  </g>
+  <g fill="#bcd3ff">
+    <rect x="30" y="55" width="7" height="9" rx="3.5"/>
+    <rect x="30" y="97" width="7" height="9" rx="3.5"/>
+  </g>
+
+  <!-- 代码行 -->
+  <g fill="#ffffff" fill-opacity="0.36">
+    <rect x="46" y="34" width="82" height="9" rx="4.5"/>
+    <rect x="46" y="76" width="60" height="9" rx="4.5"/>
+    <rect x="46" y="118" width="74" height="9" rx="4.5"/>
+  </g>
+  <g fill="#ffffff" fill-opacity="0.88">
+    <rect x="46" y="55" width="68" height="9" rx="4.5"/>
+    <rect x="46" y="97" width="92" height="9" rx="4.5"/>
+  </g>
+</svg>

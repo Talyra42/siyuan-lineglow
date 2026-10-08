@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="768" viewBox="0 0 1024 768" role="img" aria-label="Line Glow preview">
+  <defs>
+    <linearGradient id="page" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffffff"/>
+      <stop offset="1" stop-color="#eef2f9"/>
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="6" stdDeviation="10" flood-color="#1f2937" flood-opacity="0.10"/>
+    </filter>
+  </defs>
+
+  <rect width="1024" height="768" fill="url(#page)"/>
+
+  <rect x="112" y="150" width="800" height="346" rx="12" fill="#f7f8fa" stroke="#e7e9ee" filter="url(#shadow)"/>
+
+  <!-- 高亮行的整行背景（第 2 行与第 4-5 行） -->
+  <g fill="#3575f0" fill-opacity="0.16">
+    <rect x="128" y="224" width="768" height="34"/>
+    <rect x="128" y="292" width="768" height="68"/>
+  </g>
+
+  <!-- 语言标记 -->
+  <text x="140" y="176" font-family="'Segoe UI', system-ui, sans-serif" font-size="17" fill="#99a0aa">js</text>
+
+  <!-- 行号 -->
+  <g font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="21" text-anchor="end" fill="#a6acb6">
+    <text x="196" y="214">1</text>
+    <text x="196" y="282">3</text>
+    <text x="196" y="384">6</text>
+    <text x="196" y="418">7</text>
+    <text x="196" y="452">8</text>
+  </g>
+  <g font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="21" text-anchor="end" fill="#3575f0" font-weight="600">
+    <text x="196" y="248">2</text>
+    <text x="196" y="316">4</text>
+    <text x="196" y="350">5</text>
+  </g>
+
+  <!-- 代码 -->
+  <g font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="21" fill="#1f2328">
+    <text x="228" y="214" fill="#6e7781">// highlight specific lines</text>
+    <text x="228" y="248"><tspan fill="#cf222e">const</tspan><tspan> nums = [</tspan><tspan fill="#0550ae">1, 2, 3, 4, 5</tspan><tspan>];</tspan></text>
+    <text x="228" y="316"><tspan fill="#cf222e">const</tspan><tspan> odd = nums.</tspan><tspan fill="#8250df">filter</tspan><tspan>(</tspan></text>
+    <text x="228" y="350"><tspan>  (n) =&gt; n % </tspan><tspan fill="#0550ae">2</tspan><tspan> === </tspan><tspan fill="#0550ae">1</tspan><tspan>,</tspan></text>
+    <text x="228" y="384">);</text>
+    <text x="228" y="452"><tspan>console.</tspan><tspan fill="#8250df">log</tspan><tspan>(odd);</tspan></text>
+  </g>
+
+  <!-- 属性说明 -->
+  <rect x="352" y="568" width="320" height="44" rx="22" fill="#e9efff"/>
+  <text x="512" y="597" text-anchor="middle" font-family="Consolas, 'Cascadia Mono', Menlo, monospace" font-size="19" fill="#2b4b9b">custom-code-hl="2,4-5"</text>
+</svg>
