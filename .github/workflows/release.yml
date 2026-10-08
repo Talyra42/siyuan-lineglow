@@ -24,7 +24,9 @@ jobs:
 
       # 仓库不跟踪 pnpm-lock.yaml，因此不使用 frozen-lockfile 与依赖缓存
       - name: Install dependencies
-        run: pnpm install
+        # CI 环境默认开启 frozen-lockfile，而本仓库不提交 pnpm-lock.yaml，
+        # 不显式关闭会直接以 ERR_PNPM_NO_LOCKFILE 失败
+        run: pnpm install --no-frozen-lockfile
 
       - name: Type check
         run: pnpm typecheck
