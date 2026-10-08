@@ -114,29 +114,18 @@ export const buildBackgroundLayers = (
   flags: IStyleFlags,
   settings: IPluginSettings,
 ): IBackgroundLayers => {
-  const images: string[] = [];
-  const sizes: string[] = [];
-  if (bands.length === 0) {
+  if (bands.length === 0 || !flags.background) {
     return {
-      images,
+      images: [],
       positions: [],
-      sizes,
+      sizes: [],
     };
   }
-  // 整行背景：整幅渐变铺满宽度
-  if (flags.background) {
-    images.push(buildGradient(toRgba(settings.backgroundColor, settings.backgroundOpacity), bands));
-    sizes.push("100% 100%");
-  }
-  // 左侧竖条：同一条渐变，但图层只有竖条那么宽
-  if (flags.leftBar) {
-    images.push(buildGradient(settings.leftBarColor, bands));
-    sizes.push(`${settings.leftBarWidth}px 100%`);
-  }
+  const images = [buildGradient(toRgba(settings.backgroundColor, settings.backgroundOpacity), bands)];
   return {
     images,
-    positions: images.map(() => "0 0"),
-    sizes,
+    positions: ["0 0"],
+    sizes: ["100% 100%"],
   };
 };
 
@@ -160,7 +149,7 @@ const setStyle = (
 };
 
 /**
- * 用背景图层绘制整行背景与左侧竖条。
+ * 用背景图层绘制整行背景。
  * 背景始终绘制在元素文字下方，不改动代码块内部结构，因此不会影响思源的序列化与光标。
  */
 const applyBackground = (

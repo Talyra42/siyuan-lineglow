@@ -13,12 +13,9 @@
   "settingBackground": "Line background",
   "settingBackgroundColor": "Background color",
   "settingBackgroundOpacity": "Background opacity",
-  "settingLeftBar": "Left bar",
-  "settingLeftBarColor": "Bar color",
-  "settingLeftBarWidth": "Bar width (px)",
   "settingGutter": "Color the line numbers",
   "settingGutterColor": "Line number color",
   "settingGutterBold": "Bold line numbers",
   "settingStyleTipTitle": "Per block override",
-  "settingStyleTip": "Set the custom-code-hl-style attribute on a code block to turn styles on individually with bg, bar and num, or off with no-bg, no-bar and no-num. all and none toggle every style"
+  "settingStyleTip": "Set the custom-code-hl-style attribute on a code block to turn styles on individually with bg and num, or off with no-bg and no-num. all and none toggle every style"
 }

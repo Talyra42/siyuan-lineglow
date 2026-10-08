@@ -7,7 +7,7 @@ export const STORAGE_NAME = "settings";
 export const ATTR_LINES = "custom-code-hl";
 
 /**
- * 代码块上覆盖插件全局样式的自定义属性名，取值为 `bg`/`bar`/`num` 及其否定形式 `no-bg`/`no-bar`/`no-num`
+ * 代码块上覆盖插件全局样式的自定义属性名，取值为 `bg`/`num` 及其否定形式 `no-bg`/`no-num`
  * 组成的逗号分隔列表，也支持 `all` 与 `none`
  */
 export const ATTR_STYLE = "custom-code-hl-style";

@@ -56,7 +56,7 @@ export const estimateLineHeight = (codeElement: HTMLElement): number => {
 };
 
 /**
- * 计算每个待高亮区间的行带位置（相对代码元素 border box），用于绘制全宽背景与左侧竖条。
+ * 计算每个待高亮区间的行带位置（相对代码元素 border box），用于绘制整行背景。
  * 完全为空行的区间用相邻行位置配合行高推算。
  */
 export const measureBands = (

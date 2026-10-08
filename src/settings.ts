@@ -8,12 +8,6 @@ export interface IPluginSettings {
   backgroundColor: string;
   /** 整行背景不透明度 */
   backgroundOpacity: number;
-  /** 是否绘制左侧竖条 */
-  leftBar: boolean;
-  /** 左侧竖条颜色 */
-  leftBarColor: string;
-  /** 左侧竖条宽度（px） */
-  leftBarWidth: number;
   /** 是否让行号随之变色 */
   gutter: boolean;
   /** 行号高亮颜色 */
@@ -25,7 +19,6 @@ export interface IPluginSettings {
 /** 单个代码块实际生效的样式开关 */
 export interface IStyleFlags {
   background: boolean;
-  leftBar: boolean;
   gutter: boolean;
 }
 
@@ -34,10 +27,6 @@ export const DEFAULT_SETTINGS: IPluginSettings = {
   background: true,
   backgroundColor: "#3575f0",
   backgroundOpacity: 0.16,
-  // 左侧竖条可单独开启，默认关闭，避免在默认主题下与代码块边距叠加出双线观感
-  leftBar: false,
-  leftBarColor: "#3575f0",
-  leftBarWidth: 3,
   gutter: true,
   gutterColor: "#3575f0",
   gutterBold: false,
@@ -66,9 +55,6 @@ export function normalizeSettings(raw: unknown): IPluginSettings {
     background: normalizeBool(data.background, DEFAULT_SETTINGS.background),
     backgroundColor: normalizeColor(data.backgroundColor, DEFAULT_SETTINGS.backgroundColor),
     backgroundOpacity: normalizeNumber(data.backgroundOpacity, DEFAULT_SETTINGS.backgroundOpacity, 0, 1),
-    leftBar: normalizeBool(data.leftBar, DEFAULT_SETTINGS.leftBar),
-    leftBarColor: normalizeColor(data.leftBarColor, DEFAULT_SETTINGS.leftBarColor),
-    leftBarWidth: normalizeNumber(data.leftBarWidth, DEFAULT_SETTINGS.leftBarWidth, 1, 16),
     gutter: normalizeBool(data.gutter, DEFAULT_SETTINGS.gutter),
     gutterColor: normalizeColor(data.gutterColor, DEFAULT_SETTINGS.gutterColor),
     gutterBold: normalizeBool(data.gutterBold, DEFAULT_SETTINGS.gutterBold),
@@ -78,7 +64,6 @@ export function normalizeSettings(raw: unknown): IPluginSettings {
 const STYLE_ON: Record<string, keyof IStyleFlags> = {
   bg: "background",
   background: "background",
-  bar: "leftBar",
   num: "gutter",
   gutter: "gutter",
 };
@@ -86,7 +71,6 @@ const STYLE_ON: Record<string, keyof IStyleFlags> = {
 const STYLE_OFF: Record<string, keyof IStyleFlags> = {
   "no-bg": "background",
   "no-background": "background",
-  "no-bar": "leftBar",
   "no-num": "gutter",
   "no-gutter": "gutter",
 };
@@ -98,20 +82,17 @@ const STYLE_OFF: Record<string, keyof IStyleFlags> = {
 export function resolveStyleFlags(attrValue: string, settings: IPluginSettings): IStyleFlags {
   const flags: IStyleFlags = {
     background: settings.background,
-    leftBar: settings.leftBar,
     gutter: settings.gutter,
   };
   const tokens = attrValue.split(",").map(token => token.trim().toLowerCase()).filter(Boolean);
   for (const token of tokens) {
     if (token === "all") {
       flags.background = true;
-      flags.leftBar = true;
       flags.gutter = true;
       continue;
     }
     if (token === "none") {
       flags.background = false;
-      flags.leftBar = false;
       flags.gutter = false;
       continue;
     }

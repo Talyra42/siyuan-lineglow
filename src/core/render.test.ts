@@ -8,39 +8,39 @@ const bands = [
 ];
 
 describe("buildBackgroundLayers", () => {
-  it("collapses every band into a single gradient layer per style", () => {
-    const layers = buildBackgroundLayers(bands, { background: true, leftBar: true, gutter: true }, DEFAULT_SETTINGS);
-    // 图层数量与行带数量无关：整行背景一层，左侧竖条一层
-    expect(layers.images).toHaveLength(2);
-    expect(layers.positions).toEqual(["0 0", "0 0"]);
-    expect(layers.sizes).toEqual(["100% 100%", "3px 100%"]);
+  it("collapses every band into a single gradient layer", () => {
+    const layers = buildBackgroundLayers(bands, { background: true, gutter: true }, DEFAULT_SETTINGS);
+    // 图层数量与行带数量无关，永远只有一层
+    expect(layers.images).toHaveLength(1);
+    expect(layers.positions).toEqual(["0 0"]);
+    expect(layers.sizes).toEqual(["100% 100%"]);
     expect(layers.images[0]).toBe(
       "linear-gradient(to bottom, transparent 0.00px 10.00px, "
       + "rgba(53, 117, 240, 0.16) 10.00px 30.00px, transparent 30.00px 50.50px, "
       + "rgba(53, 117, 240, 0.16) 50.50px 70.50px, transparent 70.50px 100%)",
     );
-    expect(layers.images[1]).toContain(`${DEFAULT_SETTINGS.leftBarColor} 10.00px 30.00px`);
   });
 
-  it("emits nothing when both styles are disabled", () => {
-    const layers = buildBackgroundLayers(bands, { background: false, leftBar: false, gutter: true }, DEFAULT_SETTINGS);
+  it("emits nothing when the background is disabled or there is no band", () => {
+    const layers = buildBackgroundLayers(bands, { background: false, gutter: true }, DEFAULT_SETTINGS);
     expect(layers.images).toEqual([]);
+    expect(buildBackgroundLayers([], { background: true, gutter: true }, DEFAULT_SETTINGS).images).toEqual([]);
   });
 
-  it("uses the configured opacity and width", () => {
+  it("uses the configured color and opacity", () => {
     const layers = buildBackgroundLayers(
       [bands[0]],
-      { background: true, leftBar: true, gutter: false },
-      { ...DEFAULT_SETTINGS, backgroundOpacity: 0.5, leftBarWidth: 5 },
+      { background: true, gutter: false },
+      { ...DEFAULT_SETTINGS, backgroundColor: "#ff0000", backgroundOpacity: 0.5 },
     );
-    expect(layers.images[0]).toContain("rgba(53, 117, 240, 0.5)");
-    expect(layers.sizes[1]).toBe("5px 100%");
+    expect(layers.images[0]).toContain("rgba(255, 0, 0, 0.5)");
+    expect(layers.sizes).toEqual(["100% 100%"]);
   });
 
-  it("never produces more than two layers regardless of the band count", () => {
+  it("keeps a single layer regardless of the band count", () => {
     const many = Array.from({ length: 500 }, (_, index) => ({ top: index * 20, height: 10 }));
-    const layers = buildBackgroundLayers(many, { background: true, leftBar: true, gutter: true }, DEFAULT_SETTINGS);
-    expect(layers.images).toHaveLength(2);
+    const layers = buildBackgroundLayers(many, { background: true, gutter: true }, DEFAULT_SETTINGS);
+    expect(layers.images).toHaveLength(1);
   });
 });
 

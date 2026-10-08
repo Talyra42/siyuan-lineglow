@@ -13,12 +13,9 @@
   "settingBackground": "整行背景",
   "settingBackgroundColor": "背景颜色",
   "settingBackgroundOpacity": "背景不透明度",
-  "settingLeftBar": "左侧竖条",
-  "settingLeftBarColor": "竖条颜色",
-  "settingLeftBarWidth": "竖条宽度（像素）",
   "settingGutter": "行号随高亮变色",
   "settingGutterColor": "行号颜色",
   "settingGutterBold": "行号加粗",
   "settingStyleTipTitle": "按块覆盖样式",
-  "settingStyleTip": "在代码块的 custom-code-hl-style 属性中填写 bg、bar、num 可单独开启，no-bg、no-bar、no-num 可单独关闭，all 与 none 表示全部开启或关闭"
+  "settingStyleTip": "在代码块的 custom-code-hl-style 属性中填写 bg、num 可单独开启，no-bg、no-num 可单独关闭，all 与 none 表示全部开启或关闭"
 }

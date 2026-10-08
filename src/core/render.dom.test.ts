@@ -48,16 +48,16 @@ describe("code block dom plumbing", () => {
 });
 
 describe("applyBlock", () => {
-  it("paints a background layer and a left bar layer and colors the line numbers", () => {
-    const block = buildDom(` custom-code-hl-style="bg,bar,num"`);
+  it("paints the background layer and colors the line numbers", () => {
+    const block = buildDom(` custom-code-hl-style="bg,num"`);
     applyBlock(block, "1,3-5", DEFAULT_SETTINGS);
     const code = getCodeElement(block)!;
-    expect(layerCount(code)).toBe(2);
+    expect(layerCount(code)).toBe(1);
     // jsdom 会规范化取值，这里只校验关键数值是否写入
     expect(code.style.backgroundImage).toMatch(/10(\.00)?px/);
     expect(code.style.backgroundImage).toMatch(/30(\.00)?px/);
-    expect(code.style.backgroundPosition).toBe("0px 0px, 0px 0px");
-    expect(code.style.backgroundSize).toMatch(/3px/);
+    expect(code.style.backgroundPosition).toBe("0px 0px");
+    expect(code.style.backgroundSize).toBe("100% 100%");
     expect(code.style.backgroundRepeat).toBe("no-repeat");
     expect(code.style.backgroundOrigin).toBe("border-box");
     const css = gutterStyleOf()?.textContent ?? "";
@@ -66,11 +66,11 @@ describe("applyBlock", () => {
   });
 
   it("honours the per block style override", () => {
-    const block = buildDom(` custom-code-hl-style="bar,no-bg"`);
+    const block = buildDom(` custom-code-hl-style="no-bg"`);
     applyBlock(block, "2", DEFAULT_SETTINGS);
     const code = getCodeElement(block)!;
-    expect(layerCount(code)).toBe(1);
-    expect(code.style.backgroundSize).toMatch(/^3px/);
+    expect(code.style.backgroundImage).toBe("");
+    // 只关掉背景时，行号仍然变色
     expect(gutterStyleOf()?.textContent).toContain(':nth-child(n+2):nth-child(-n+2)');
   });
 

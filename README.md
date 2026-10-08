@@ -14,7 +14,6 @@ Highlight the specified lines of a code block in SiYuan
 - 🎯 **Line ranges** - Highlight any lines of a code block with the VitePress line range syntax
 - 🎨 **Whole line background** - Configurable color and opacity
 - 🔢 **Line numbers** - The matching line numbers change color, optionally bold
-- 📏 **Left bar** - Optional style, disabled by default
 - ⚙️ **Per block override** - Override the global styles on a single code block with a block attribute
 - 🌐 **Theming** - Chinese and English UI, fully configurable colors
 
@@ -63,7 +62,6 @@ Set `custom-code-hl-style` on a code block to override the plugin settings:
 | Token | Effect |
 |---|---|
 | `bg` / `no-bg` | turn the line background on / off |
-| `bar` / `no-bar` | turn the left bar on / off |
 | `num` / `no-num` | turn the line number coloring on / off |
 | `all` / `none` | turn every style on / off |
 
@@ -91,7 +89,7 @@ pnpm release            # interactive release (version, commit, tag, push)
 ## ⚡ Performance and stability
 
 - The code block markup is never modified: the highlight is drawn with inline styles on the code body plus one injected CSS rule, so nothing is serialized into the note and the caret and undo history stay intact
-- The number of background layers is constant: every band is merged into a single vertical gradient, so at most 2 layers exist no matter how many ranges are highlighted
+- The number of background layers is constant: every band is merged into a single vertical gradient, so exactly 1 layer exists no matter how many ranges are highlighted
 - Rendering is debounced and bounded: DOM changes are coalesced with a 160ms debounce, a single block handles at most 200 ranges, and an attribute longer than 4096 characters is ignored
 - Long documents are scanned in batches of 40 code blocks
 - Nothing leaks: unload removes every listener, observer and injected style, and ResizeObserver entries for detached blocks are released during a full scan
