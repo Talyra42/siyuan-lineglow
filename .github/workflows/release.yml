@@ -14,17 +14,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Install pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@v6
         with:
           version: 11
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: 20
+          # pnpm 11 依赖 node:sqlite，要求 Node.js >= 22.13
+          node-version: 24
 
       # 仓库不跟踪 pnpm-lock.yaml，因此不使用 frozen-lockfile 与依赖缓存
       - name: Install dependencies
