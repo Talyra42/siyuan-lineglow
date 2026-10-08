@@ -40,6 +40,7 @@ export default class CodeLineHighlight extends Plugin {
     });
     this.setting = createSettingPanel({
       plugin: this,
+      isMobile: this.isMobile,
       getSettings: () => this.settings,
       onChange: () => refreshAll(),
       onPersist: () => this.persistSettings(),

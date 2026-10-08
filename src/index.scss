@@ -5,11 +5,48 @@
   }
 }
 
+.clh-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(232px, 1fr));
+  gap: 2px 28px;
+}
+
+.clh-settings__group-title {
+  margin-bottom: 2px;
+  color: var(--b3-theme-on-background);
+  font-size: 13px;
+  font-weight: 600;
+  line-height: 20px;
+}
+
+.clh-settings__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 30px;
+  cursor: pointer;
+}
+
+.clh-settings__label {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  color: var(--b3-theme-on-background);
+  font-size: 13px;
+  line-height: 20px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.clh-settings__control {
+  flex: none;
+}
+
 .clh-setting-color {
   width: 40px;
   padding: 2px;
 }
 
 .clh-setting-number {
-  width: 80px;
+  width: 76px;
 }
