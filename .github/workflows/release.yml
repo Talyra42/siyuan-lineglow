@@ -5,6 +5,10 @@ on:
     tags:
       - "v*"
 
+# 仓库默认的 GITHUB_TOKEN 权限是只读，创建 Release 需要显式声明写权限
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
