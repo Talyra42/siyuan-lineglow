@@ -3,7 +3,6 @@ import { existsSync } from "node:fs"
 import { resolve } from "node:path"
 import fg from "fast-glob"
 import minimist from "minimist"
-import livereload from "rollup-plugin-livereload"
 import {
   defineConfig,
   loadEnv,
@@ -93,9 +92,10 @@ export default defineConfig(({
         plugins: [
           ...(isWatch
             ? [
-                livereload(devDistDir),
                 {
                   // 监听静态资源文件
+                  // 这里只监听项目里的源文件；不要在部署目录上建立文件监视，
+                  // 该目录同时被思源读取，Windows 下 chokidar 会抛 EBUSY 直接中断构建。
                   name: "watch-external",
                   async buildStart() {
                     const files = await fg([

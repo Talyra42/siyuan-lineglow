@@ -119,6 +119,16 @@ Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/inst
 | `pnpm build` | produce `dist/` and the release `package.zip` |
 | `pnpm release` | interactive release: bump version → commit → tag → push (CI creates the GitHub Release) |
 
+### Seeing your changes in SiYuan
+
+`pnpm dev` only compiles the changes into the workspace; it does **not** refresh the SiYuan UI. After editing:
+
+1. Keep `pnpm dev` running in the terminal until it reports the build is done
+2. In SiYuan run `Settings` - `App` - `Maintenance` - `Reload UI`
+3. For small changes such as wording, you can also toggle the plugin off and on in `Settings` - `Marketplace` - `Downloaded`
+
+> There is no live reload because SiYuan's desktop page does not include the livereload client script, so a livereload server cannot trigger a refresh. The livereload plugin shipped with the template also watches `data/plugins` — a directory SiYuan is reading at the same time — which on Windows throws `EBUSY: resource busy or locked` and aborts the build. This project therefore watches only its own source files.
+
 `asset/` holds the SVG sources of the icon and the preview. Re-export them as `icon.png` (160×160) and `preview.png` (1024×768) in the repository root after editing.
 
 ## 📄 License
