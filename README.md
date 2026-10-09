@@ -102,6 +102,7 @@ No. The plugin only adds one `custom-*` attribute to the code block. After unins
 - **The code block markup is never modified**: the highlight is drawn with inline styles on the code body plus one injected CSS rule, so nothing is serialized into the note and the caret and undo history stay intact
 - **The number of background layers is constant**: every band is merged into a single vertical gradient, so exactly 1 layer exists no matter how many ranges are highlighted
 - **Debounced and bounded**: DOM changes are coalesced with a 160ms debounce, a single block handles at most 200 ranges, and an attribute longer than 4096 characters is ignored
+- **The first frame is already highlighted**: opening or re-opening a document renders in the same frame as the code block, instead of showing plain code and popping the highlight in afterwards
 - **Long documents are scanned in batches** of 40 code blocks
 - **Nothing leaks**: unload removes every listener, observer and injected style, and ResizeObserver entries for detached blocks are released during a full scan
 
@@ -109,16 +110,18 @@ No. The plugin only adds one `custom-*` attribute to the code block. After unins
 
 Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation).
 
-| Command          | What it does                                                                            |
-| ---------------- | --------------------------------------------------------------------------------------- |
-| `pnpm install`   | install dependencies                                                                    |
-| `pnpm dev`       | watch build into `<workspace>/data/plugins/siyuan-lineglow`                             |
-| `pnpm test`      | unit tests, DOM integration tests, scanner lifecycle tests and performance guardrails   |
-| `pnpm typecheck` | type check                                                                              |
-| `pnpm lint`      | lint                                                                                    |
-| `pnpm format`    | format with Prettier (`pnpm format:check` verifies without writing)                     |
-| `pnpm build`     | produce `dist/` and the release `package.zip`                                           |
-| `pnpm release`   | interactive release: bump version → commit → tag → push (CI creates the GitHub Release) |
+| Command          | What it does                                                                                          |
+| ---------------- | ----------------------------------------------------------------------------------------------------- |
+| `pnpm install`   | install dependencies                                                                                  |
+| `pnpm dev`       | watch build into `<workspace>/data/plugins/siyuan-lineglow`                                           |
+| `pnpm test`      | unit tests, DOM integration tests, scanner lifecycle tests and performance guardrails                 |
+| `pnpm typecheck` | type check                                                                                            |
+| `pnpm lint`      | lint                                                                                                  |
+| `pnpm format`    | format with Prettier (`pnpm format:check` verifies without writing)                                   |
+| `pnpm build`     | produce `dist/` and the release `package.zip`                                                         |
+| `pnpm release`   | interactive release: bump version and CHANGELOG → commit → tag → push (CI creates the GitHub Release) |
+
+Version history lives in [CHANGELOG.md](./CHANGELOG.md).
 
 ### Seeing your changes in SiYuan
 

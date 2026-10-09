@@ -102,6 +102,7 @@
 - **不改动代码块结构**：高亮完全由代码正文元素的内联样式与一条注入的 CSS 规则实现，不往块里插任何节点，因此不会被思源序列化写进笔记，也不影响光标与撤销
 - **图层数量恒定**：所有行带合并进同一条竖向渐变，不管高亮多少段，永远只有 1 个背景图层
 - **有防抖也有上限**：DOM 变化以 160ms 防抖合并；单块最多处理 200 段区间，属性超过 4096 字符直接忽略
+- **首帧就绪**：打开或重新打开文档时，高亮与代码块在同一帧出现，不会先显示无高亮的代码再弹出
 - **长文档分批**：整篇扫描按每批 40 个代码块让出主线程
 - **无泄漏**：卸载时移除全部监听、观察器与注入样式，ResizeObserver 观察过的失效节点会在全量扫描时释放
 
@@ -109,16 +110,18 @@
 
 需要 [NodeJS](https://nodejs.org/en/download) 与 [pnpm](https://pnpm.io/installation)。
 
-| 命令             | 作用                                                               |
-| ---------------- | ------------------------------------------------------------------ |
-| `pnpm install`   | 安装依赖                                                           |
-| `pnpm dev`       | 监听构建到 `<工作空间>/data/plugins/siyuan-lineglow`               |
-| `pnpm test`      | 单元测试、DOM 集成测试、扫描器生命周期测试与性能护栏               |
-| `pnpm typecheck` | 类型检查                                                           |
-| `pnpm lint`      | 代码检查                                                           |
-| `pnpm format`    | 用 Prettier 格式化仓库（`pnpm format:check` 只校验不写回）         |
-| `pnpm build`     | 生成 `dist/` 与发布用的 `package.zip`                              |
-| `pnpm release`   | 交互式发版：改版本号 → 提交 → 打标签 → 推送（CI 会自动建 Release） |
+| 命令             | 作用                                                                           |
+| ---------------- | ------------------------------------------------------------------------------ |
+| `pnpm install`   | 安装依赖                                                                       |
+| `pnpm dev`       | 监听构建到 `<工作空间>/data/plugins/siyuan-lineglow`                           |
+| `pnpm test`      | 单元测试、DOM 集成测试、扫描器生命周期测试与性能护栏                           |
+| `pnpm typecheck` | 类型检查                                                                       |
+| `pnpm lint`      | 代码检查                                                                       |
+| `pnpm format`    | 用 Prettier 格式化仓库（`pnpm format:check` 只校验不写回）                     |
+| `pnpm build`     | 生成 `dist/` 与发布用的 `package.zip`                                          |
+| `pnpm release`   | 交互式发版：改版本号与 CHANGELOG → 提交 → 打标签 → 推送（CI 会自动建 Release） |
+
+版本历史见 [CHANGELOG.md](./CHANGELOG.md)。
 
 ### 改完代码怎么在思源里看到
 

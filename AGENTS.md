@@ -57,6 +57,15 @@
 - 运行 `pnpm test`（可用 `pnpm test -- <pattern>` 过滤）。不强制覆盖率，但新增
   解析/渲染逻辑应附带测试。
 
+## 变更日志
+
+`CHANGELOG.md` 是面向用户的功能清单，格式参考 Keep a Changelog。**新增功能、修复问题、
+行为变更都要同步写进 `[Unreleased]` 小节**，分类用 `新增` / `变更` / `修复` / `文档` / `工程`；
+纯内部重构、依赖升级、文档笔误之类的小改动可以合并成一条。
+
+发布时 `pnpm release` 会把 `[Unreleased]` 自动归档成 `## [X.Y.Z] - YYYY-MM-DD` 并留下
+新的空 `[Unreleased]`，所以不要手动改版本小节，也不要在提交里写未来的版本号。
+
 ## 提交与 PR 规范
 
 - 提交遵循 Conventional Commits，摘要使用简洁中文，例如
@@ -70,3 +79,7 @@
 推送 `v*` 标签会触发 `.github/workflows/release.yml`，依次执行类型检查、测试、
 `pnpm build`，并把 `package.zip` 附加到 GitHub Release。请保持 `plugin.json`
 与 `package.json` 的版本一致（`pnpm release` 会同时更新两者）。
+
+`pnpm release`（或 `pnpm release:minor` / `:patch` / `:major`）做四件事：更新版本号、
+把 `CHANGELOG.md` 的 `[Unreleased]` 归档成该版本、提交并推送、打 `vX.Y.Z` 标签并推送。
+所以发布前请先确认 `[Unreleased]` 已经写好这一版要说明的内容。
