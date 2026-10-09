@@ -1,47 +1,40 @@
 /* eslint-disable node/prefer-global/process */
-import { existsSync } from "node:fs"
-import { resolve } from "node:path"
-import fg from "fast-glob"
-import minimist from "minimist"
-import {
-  defineConfig,
-  loadEnv,
-} from "vite"
-import { viteStaticCopy } from "vite-plugin-static-copy"
-import zipPack from "vite-plugin-zip-pack"
+import { existsSync } from "node:fs";
+import { resolve } from "node:path";
+import fg from "fast-glob";
+import minimist from "minimist";
+import { defineConfig, loadEnv } from "vite";
+import { viteStaticCopy } from "vite-plugin-static-copy";
+import zipPack from "vite-plugin-zip-pack";
 
-const pluginInfo = require("./plugin.json")
+const pluginInfo = require("./plugin.json");
 const packageImageTargets = [
   ["icon", "icon.png"],
   ["preview", "preview.png"],
 ].flatMap(([field, legacyName]) => {
-  const fileName = pluginInfo[field] || (existsSync(legacyName) ? legacyName : "")
-  return fileName ? [{ src: `./${fileName}`, dest: "./" }] : []
-})
+  const fileName = pluginInfo[field] || (existsSync(legacyName) ? legacyName : "");
+  return fileName ? [{ src: `./${fileName}`, dest: "./" }] : [];
+});
 
-export default defineConfig(({
-  mode,
-}) => {
-  const env = loadEnv(mode, process.cwd(), "")
-  const {
-    VITE_SIYUAN_WORKSPACE_PATH,
-  } = env
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd(), "");
+  const { VITE_SIYUAN_WORKSPACE_PATH } = env;
 
-  let devDistDir = "./dev"
+  let devDistDir = "./dev";
   if (!VITE_SIYUAN_WORKSPACE_PATH) {
-    console.log("\nSiyuan workspace path is not set, build to ./dev instead.")
+    console.log("\nSiyuan workspace path is not set, build to ./dev instead.");
   } else {
-    console.log(`\nSiyuan workspace path is set:\n${VITE_SIYUAN_WORKSPACE_PATH}`)
-    devDistDir = `${VITE_SIYUAN_WORKSPACE_PATH}/data/plugins/${pluginInfo.name}`
+    console.log(`\nSiyuan workspace path is set:\n${VITE_SIYUAN_WORKSPACE_PATH}`);
+    devDistDir = `${VITE_SIYUAN_WORKSPACE_PATH}/data/plugins/${pluginInfo.name}`;
   }
 
-  const args = minimist(process.argv.slice(2))
-  const isWatch = args.watch || args.w || false
-  const distDir = isWatch ? devDistDir : "./dist"
+  const args = minimist(process.argv.slice(2));
+  const isWatch = args.watch || args.w || false;
+  const distDir = isWatch ? devDistDir : "./dist";
 
-  console.log(`mode=> ${mode}`)
-  console.log(`isWatch=> ${isWatch}`)
-  console.log(`distDir=> ${distDir}`)
+  console.log(`mode=> ${mode}`);
+  console.log(`isWatch=> ${isWatch}`);
+  console.log(`distDir=> ${distDir}`);
 
   return {
     resolve: {
@@ -103,13 +96,9 @@ export default defineConfig(({
                   // 该目录同时被思源读取，Windows 下 chokidar 会抛 EBUSY 直接中断构建。
                   name: "watch-external",
                   async buildStart() {
-                    const files = await fg([
-                      "src/i18n/*.json",
-                      "./README*.md",
-                      "./plugin.json",
-                    ])
+                    const files = await fg(["src/i18n/*.json", "./README*.md", "./plugin.json"]);
                     for (const file of files) {
-                      this.addWatchFile(file)
+                      this.addWatchFile(file);
                     }
                   },
                 },
@@ -129,12 +118,12 @@ export default defineConfig(({
           entryFileNames: "[name].js",
           assetFileNames: (assetInfo) => {
             if (assetInfo.name === "style.css") {
-              return "index.css"
+              return "index.css";
             }
-            return assetInfo.name
+            return assetInfo.name;
           },
         },
       },
     },
-  }
-})
+  };
+});

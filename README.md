@@ -45,11 +45,11 @@ This plugin takes a different route: the line ranges are stored in the code bloc
 
 Three entry points, use whichever you like:
 
-| Entry | How |
-|---|---|
-| Block menu | Click the block icon on the left of a code block → `Plugin` - `Line Glow` |
-| Shortcut | Put the cursor inside the code block and press `⌥⌘H` |
-| Block attribute | Edit `custom-code-hl` directly in the block attribute panel |
+| Entry           | How                                                                       |
+| --------------- | ------------------------------------------------------------------------- |
+| Block menu      | Click the block icon on the left of a code block → `Plugin` - `Line Glow` |
+| Shortcut        | Put the cursor inside the code block and press `⌥⌘H`                      |
+| Block attribute | Edit `custom-code-hl` directly in the block attribute panel               |
 
 The dialog previews the result **while you type**, and writes the attribute when you confirm.
 
@@ -57,10 +57,10 @@ The dialog previews the result **while you type**, and writes the attribute when
 
 Identical to VitePress. Lines are counted from 1 and ranges are inclusive:
 
-| Value | Meaning |
-|---|---|
-| `3` | highlight line 3 only |
-| `4-6` | highlight lines 4 to 6 |
+| Value     | Meaning                          |
+| --------- | -------------------------------- |
+| `3`       | highlight line 3 only            |
+| `4-6`     | highlight lines 4 to 6           |
 | `1,4-6,9` | highlight lines 1, 4, 5, 6 and 9 |
 
 A few tips:
@@ -75,11 +75,11 @@ Global styles live behind the gear icon of `Settings` - `Marketplace` - `Downloa
 
 To style **one code block** differently, add `custom-code-hl-style` to its block attributes (same panel as `custom-code-hl`):
 
-| Token | Effect |
-|---|---|
-| `bg` / `no-bg` | turn the line background on / off |
+| Token            | Effect                                 |
+| ---------------- | -------------------------------------- |
+| `bg` / `no-bg`   | turn the line background on / off      |
 | `num` / `no-num` | turn the line number coloring on / off |
-| `all` / `none` | turn every style on / off |
+| `all` / `none`   | turn every style on / off              |
 
 For example `custom-code-hl-style="num,no-bg"` keeps the line number coloring only. Blocks without this attribute simply follow the global settings.
 
@@ -109,15 +109,16 @@ No. The plugin only adds one `custom-*` attribute to the code block. After unins
 
 Install [NodeJS](https://nodejs.org/en/download) and [pnpm](https://pnpm.io/installation).
 
-| Command | What it does |
-|---|---|
-| `pnpm install` | install dependencies |
-| `pnpm dev` | watch build into `<workspace>/data/plugins/siyuan-lineglow` |
-| `pnpm test` | unit tests, DOM integration tests, scanner lifecycle tests and performance guardrails |
-| `pnpm typecheck` | type check |
-| `pnpm lint` | lint |
-| `pnpm build` | produce `dist/` and the release `package.zip` |
-| `pnpm release` | interactive release: bump version → commit → tag → push (CI creates the GitHub Release) |
+| Command          | What it does                                                                            |
+| ---------------- | --------------------------------------------------------------------------------------- |
+| `pnpm install`   | install dependencies                                                                    |
+| `pnpm dev`       | watch build into `<workspace>/data/plugins/siyuan-lineglow`                             |
+| `pnpm test`      | unit tests, DOM integration tests, scanner lifecycle tests and performance guardrails   |
+| `pnpm typecheck` | type check                                                                              |
+| `pnpm lint`      | lint                                                                                    |
+| `pnpm format`    | format with Prettier (`pnpm format:check` verifies without writing)                     |
+| `pnpm build`     | produce `dist/` and the release `package.zip`                                           |
+| `pnpm release`   | interactive release: bump version → commit → tag → push (CI creates the GitHub Release) |
 
 ### Seeing your changes in SiYuan
 

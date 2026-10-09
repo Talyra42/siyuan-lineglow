@@ -3,20 +3,17 @@ import { DEFAULT_SETTINGS, normalizeSettings, resolveStyleFlags, toRgba } from "
 
 describe("resolveStyleFlags", () => {
   it("falls back to the global settings", () => {
-    expect(resolveStyleFlags("", DEFAULT_SETTINGS))
-      .toEqual({ background: true, gutter: true });
+    expect(resolveStyleFlags("", DEFAULT_SETTINGS)).toEqual({ background: true, gutter: true });
   });
 
   it("applies on and off tokens", () => {
-    expect(resolveStyleFlags("num,no-bg", DEFAULT_SETTINGS))
-      .toEqual({ background: false, gutter: true });
+    expect(resolveStyleFlags("num,no-bg", DEFAULT_SETTINGS)).toEqual({ background: false, gutter: true });
   });
 
   it("supports all and none", () => {
     const off = { ...DEFAULT_SETTINGS, background: false, gutter: false };
     expect(resolveStyleFlags("all", off)).toEqual({ background: true, gutter: true });
-    expect(resolveStyleFlags("none", DEFAULT_SETTINGS))
-      .toEqual({ background: false, gutter: false });
+    expect(resolveStyleFlags("none", DEFAULT_SETTINGS)).toEqual({ background: false, gutter: false });
   });
 
   it("ignores unknown tokens, including the removed bar token", () => {

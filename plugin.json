@@ -5,12 +5,8 @@
   "version": "1.0.0",
   "minAppVersion": "2.10.14",
   "disabledInPublish": false,
-  "backends": [
-    "all"
-  ],
-  "frontends": [
-    "all"
-  ],
+  "backends": ["all"],
+  "frontends": ["all"],
   "displayName": {
     "default": "Line Glow",
     "zh_CN": "代码块行高亮"
@@ -28,11 +24,5 @@
   "funding": {
     "custom": []
   },
-  "keywords": [
-    "code",
-    "highlight",
-    "line",
-    "代码块",
-    "行高亮"
-  ]
+  "keywords": ["code", "highlight", "line", "代码块", "行高亮"]
 }

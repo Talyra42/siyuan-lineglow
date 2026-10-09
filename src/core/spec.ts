@@ -51,6 +51,6 @@ export function parseLineSpec(spec: string): ILineRange[] {
 /** 把区间列表还原为 `1,3-5` 形式的字符串 */
 export function formatLineSpec(ranges: ILineRange[]): string {
   return ranges
-    .map(range => (range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`))
+    .map((range) => (range.start === range.end ? `${range.start}` : `${range.start}-${range.end}`))
     .join(",");
 }

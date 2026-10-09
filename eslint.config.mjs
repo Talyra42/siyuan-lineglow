@@ -1,20 +1,14 @@
-import antfu from "@antfu/eslint-config"
+import antfu from "@antfu/eslint-config";
+import prettier from "eslint-config-prettier";
 
 export default antfu(
   {
     type: "lib",
-    stylistic: {
-      indent: 2,
-      quotes: "double",
-      semi: true,
-    },
+    // 代码风格统一交给 Prettier（见 .prettierrc.json），ESLint 只负责代码质量
+    stylistic: false,
     typescript: true,
     formatters: true,
-    ignores: [
-      "dist",
-      "dev",
-      "node_modules",
-    ],
+    ignores: ["dist", "dev", "node_modules"],
   },
   {
     rules: {
@@ -23,11 +17,6 @@ export default antfu(
 
       "no-console": "off",
       "no-empty": "off",
-
-      "style/brace-style": "off",
-      "style/padded-blocks": "off",
-      "style/quotes": "off",
-      "style/semi": "off",
 
       "ts/consistent-type-imports": "off",
       "ts/explicit-function-return-type": "off",
@@ -43,4 +32,6 @@ export default antfu(
       "format/prettier": "off",
     },
   },
-)
+  // 关闭所有可能与 Prettier 冲突的规则
+  prettier,
+);

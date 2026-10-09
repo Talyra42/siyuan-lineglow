@@ -28,8 +28,7 @@ const c = 3;</div>
 
 const gutterStyleOf = () => document.getElementById("lineglow-gutter");
 
-const layerCount = (codeElement: HTMLElement) =>
-  codeElement.style.backgroundImage.split("linear-gradient(").length - 1;
+const layerCount = (codeElement: HTMLElement) => codeElement.style.backgroundImage.split("linear-gradient(").length - 1;
 
 beforeEach(() => {
   document.head.innerHTML = "";
@@ -71,7 +70,7 @@ describe("applyBlock", () => {
     const code = getCodeElement(block)!;
     expect(code.style.backgroundImage).toBe("");
     // 只关掉背景时，行号仍然变色
-    expect(gutterStyleOf()?.textContent).toContain(':nth-child(n+2):nth-child(-n+2)');
+    expect(gutterStyleOf()?.textContent).toContain(":nth-child(n+2):nth-child(-n+2)");
   });
 
   it("clears everything when the spec is unparsable", () => {
@@ -112,7 +111,7 @@ describe("gutter rules", () => {
   });
 
   it("rejects block ids that cannot be used in a selector", () => {
-    setGutterRule("bad\"id", "span { color: red }");
+    setGutterRule('bad"id', "span { color: red }");
     expect(gutterStyleOf()).toBeNull();
   });
 });

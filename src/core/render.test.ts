@@ -15,9 +15,9 @@ describe("buildBackgroundLayers", () => {
     expect(layers.positions).toEqual(["0 0"]);
     expect(layers.sizes).toEqual(["100% 100%"]);
     expect(layers.images[0]).toBe(
-      "linear-gradient(to bottom, transparent 0.00px 10.00px, "
-      + "rgba(53, 117, 240, 0.16) 10.00px 30.00px, transparent 30.00px 50.50px, "
-      + "rgba(53, 117, 240, 0.16) 50.50px 70.50px, transparent 70.50px 100%)",
+      "linear-gradient(to bottom, transparent 0.00px 10.00px, " +
+        "rgba(53, 117, 240, 0.16) 10.00px 30.00px, transparent 30.00px 50.50px, " +
+        "rgba(53, 117, 240, 0.16) 50.50px 70.50px, transparent 70.50px 100%)",
     );
   });
 
@@ -48,26 +48,30 @@ describe("buildGutterRule", () => {
   it("scopes the rule to the code block and uses nth-child ranges", () => {
     const css = buildGutterRule(
       "20240101120000-abcdefg",
-      [{ start: 1, end: 1 }, { start: 3, end: 5 }],
+      [
+        { start: 1, end: 1 },
+        { start: 3, end: 5 },
+      ],
       DEFAULT_SETTINGS,
     );
-    expect(css).toContain('.code-block[data-node-id="20240101120000-abcdefg"] .protyle-linenumber__rows > span:nth-child(n+1):nth-child(-n+1)');
+    expect(css).toContain(
+      '.code-block[data-node-id="20240101120000-abcdefg"] .protyle-linenumber__rows > span:nth-child(n+1):nth-child(-n+1)',
+    );
     expect(css).toContain(":nth-child(n+3):nth-child(-n+5)");
     expect(css).toContain(`color: ${DEFAULT_SETTINGS.gutterColor}`);
     expect(css).not.toContain("font-weight");
   });
 
   it("bolds the line numbers when configured", () => {
-    const css = buildGutterRule(
-      "20240101120000-abcdefg",
-      [{ start: 2, end: 4 }],
-      { ...DEFAULT_SETTINGS, gutterBold: true },
-    );
+    const css = buildGutterRule("20240101120000-abcdefg", [{ start: 2, end: 4 }], {
+      ...DEFAULT_SETTINGS,
+      gutterBold: true,
+    });
     expect(css).toContain("font-weight: 600");
   });
 
   it("returns an empty rule for unusable input", () => {
-    expect(buildGutterRule("bad id\"", [{ start: 1, end: 1 }], DEFAULT_SETTINGS)).toBe("");
+    expect(buildGutterRule('bad id"', [{ start: 1, end: 1 }], DEFAULT_SETTINGS)).toBe("");
     expect(buildGutterRule("20240101120000-abcdefg", [], DEFAULT_SETTINGS)).toBe("");
   });
 });

@@ -39,8 +39,7 @@ const clamp = (value: number, min: number, max: number) => Math.min(max, Math.ma
 const normalizeColor = (value: unknown, fallback: string) =>
   typeof value === "string" && HEX_COLOR.test(value.trim()) ? value.trim() : fallback;
 
-const normalizeBool = (value: unknown, fallback: boolean) =>
-  typeof value === "boolean" ? value : fallback;
+const normalizeBool = (value: unknown, fallback: boolean) => (typeof value === "boolean" ? value : fallback);
 
 const normalizeNumber = (value: unknown, fallback: number, min: number, max: number) => {
   const num = typeof value === "number" ? value : Number.parseFloat(String(value));
@@ -84,7 +83,10 @@ export function resolveStyleFlags(attrValue: string, settings: IPluginSettings):
     background: settings.background,
     gutter: settings.gutter,
   };
-  const tokens = attrValue.split(",").map(token => token.trim().toLowerCase()).filter(Boolean);
+  const tokens = attrValue
+    .split(",")
+    .map((token) => token.trim().toLowerCase())
+    .filter(Boolean);
   for (const token of tokens) {
     if (token === "all") {
       flags.background = true;
@@ -117,7 +119,10 @@ export function toRgba(color: string, alpha: number): string {
   }
   let hex = matched[1];
   if (hex.length === 3) {
-    hex = hex.split("").map(char => char + char).join("");
+    hex = hex
+      .split("")
+      .map((char) => char + char)
+      .join("");
   }
   const value = Number.parseInt(hex, 16);
   return `rgba(${(value >> 16) & 255}, ${(value >> 8) & 255}, ${value & 255}, ${alpha})`;

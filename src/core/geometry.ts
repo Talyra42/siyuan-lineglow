@@ -59,11 +59,7 @@ export const estimateLineHeight = (codeElement: HTMLElement): number => {
  * 计算每个待高亮区间的行带位置（相对代码元素 border box），用于绘制整行背景。
  * 完全为空行的区间用相邻行位置配合行高推算。
  */
-export const measureBands = (
-  codeElement: HTMLElement,
-  info: ICodeLines,
-  ranges: ILineRange[],
-): ILineBand[] => {
+export const measureBands = (codeElement: HTMLElement, info: ICodeLines, ranges: ILineRange[]): ILineBand[] => {
   const codeRect = codeElement.getBoundingClientRect();
   if (codeRect.height <= 0) {
     return [];

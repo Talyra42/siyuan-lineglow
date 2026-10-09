@@ -40,8 +40,8 @@ describe("performance guardrails", () => {
       height: 22.5,
     }));
     const layers = buildBackgroundLayers(bands, { background: true, gutter: true }, DEFAULT_SETTINGS);
-    const styleLength = layers.images.join(", ").length + layers.positions.join(", ").length
-      + layers.sizes.join(", ").length;
+    const styleLength =
+      layers.images.join(", ").length + layers.positions.join(", ").length + layers.sizes.join(", ").length;
     console.log(`[perf] style length at ${MAX_RANGES} ranges: ${styleLength} chars`);
     // 行带合并进单条渐变，图层数量恒定
     expect(layers.images).toHaveLength(1);

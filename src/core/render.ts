@@ -71,9 +71,10 @@ export const buildGutterRule = (blockId: string, ranges: ILineRange[], settings:
   if (!BLOCK_ID_PATTERN.test(blockId) || ranges.length === 0) {
     return "";
   }
-  const selectors = ranges.map(range =>
-    `.code-block[data-node-id="${blockId}"] .protyle-linenumber__rows > span`
-    + `:nth-child(n+${range.start}):nth-child(-n+${range.end})`,
+  const selectors = ranges.map(
+    (range) =>
+      `.code-block[data-node-id="${blockId}"] .protyle-linenumber__rows > span` +
+      `:nth-child(n+${range.start}):nth-child(-n+${range.end})`,
   );
   const declarations = [`color: ${settings.gutterColor}`];
   if (settings.gutterBold) {

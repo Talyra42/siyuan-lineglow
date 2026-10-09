@@ -94,12 +94,13 @@ export const createSettingPanel = (options: ISettingPanelOptions): Setting => {
   setting.addItem({
     title: text("settingEnabled", "Enable code line highlight"),
     direction: "column",
-    createActionElement: () => createSwitch(
-      () => current().enabled,
-      (value) => {
-        current().enabled = value;
-      },
-    ),
+    createActionElement: () =>
+      createSwitch(
+        () => current().enabled,
+        (value) => {
+          current().enabled = value;
+        },
+      ),
   });
 
   setting.addItem({
@@ -111,45 +112,63 @@ export const createSettingPanel = (options: ISettingPanelOptions): Setting => {
       grid.className = "clh-settings";
       grid.append(
         createGroup(text("settingGroupBackground", "Line background"), [
-          createRow(text("settingEnable", "Enabled"), createSwitch(
-            () => current().background,
-            (value) => {
-              current().background = value;
-            },
-          )),
-          createRow(text("settingColor", "Color"), createColor(
-            () => current().backgroundColor,
-            (value) => {
-              current().backgroundColor = value;
-            },
-          )),
-          createRow(text("settingOpacity", "Opacity"), createNumber(
-            () => current().backgroundOpacity,
-            (value) => {
-              current().backgroundOpacity = value;
-            },
-            { min: 0, max: 1, step: 0.02 },
-          )),
+          createRow(
+            text("settingEnable", "Enabled"),
+            createSwitch(
+              () => current().background,
+              (value) => {
+                current().background = value;
+              },
+            ),
+          ),
+          createRow(
+            text("settingColor", "Color"),
+            createColor(
+              () => current().backgroundColor,
+              (value) => {
+                current().backgroundColor = value;
+              },
+            ),
+          ),
+          createRow(
+            text("settingOpacity", "Opacity"),
+            createNumber(
+              () => current().backgroundOpacity,
+              (value) => {
+                current().backgroundOpacity = value;
+              },
+              { min: 0, max: 1, step: 0.02 },
+            ),
+          ),
         ]),
         createGroup(text("settingGroupGutter", "Line numbers"), [
-          createRow(text("settingEnable", "Enabled"), createSwitch(
-            () => current().gutter,
-            (value) => {
-              current().gutter = value;
-            },
-          )),
-          createRow(text("settingColor", "Color"), createColor(
-            () => current().gutterColor,
-            (value) => {
-              current().gutterColor = value;
-            },
-          )),
-          createRow(text("settingBold", "Bold"), createSwitch(
-            () => current().gutterBold,
-            (value) => {
-              current().gutterBold = value;
-            },
-          )),
+          createRow(
+            text("settingEnable", "Enabled"),
+            createSwitch(
+              () => current().gutter,
+              (value) => {
+                current().gutter = value;
+              },
+            ),
+          ),
+          createRow(
+            text("settingColor", "Color"),
+            createColor(
+              () => current().gutterColor,
+              (value) => {
+                current().gutterColor = value;
+              },
+            ),
+          ),
+          createRow(
+            text("settingBold", "Bold"),
+            createSwitch(
+              () => current().gutterBold,
+              (value) => {
+                current().gutterBold = value;
+              },
+            ),
+          ),
         ]),
       );
       container.append(grid);

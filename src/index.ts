@@ -35,8 +35,8 @@ export default class CodeLineHighlight extends Plugin {
     initScanner(this, () => this.settings);
     this.disposeMenu = registerBlockMenu({
       plugin: this,
-      onOpen: blockId => this.openHighlightDialog(blockId),
-      onClear: blockId => this.clearHighlight(blockId),
+      onOpen: (blockId) => this.openHighlightDialog(blockId),
+      onClear: (blockId) => this.clearHighlight(blockId),
     });
     this.setting = createSettingPanel({
       plugin: this,
@@ -79,7 +79,7 @@ export default class CodeLineHighlight extends Plugin {
     if (!node) {
       return null;
     }
-    const element = node.nodeType === Node.ELEMENT_NODE ? node as HTMLElement : node.parentElement;
+    const element = node.nodeType === Node.ELEMENT_NODE ? (node as HTMLElement) : node.parentElement;
     return element?.closest<HTMLElement>(CODE_BLOCK_SELECTOR) ?? null;
   }
 
@@ -124,11 +124,12 @@ export default class CodeLineHighlight extends Plugin {
         placeholder: this.text("lineHighlightPlaceholder", "1,3-5"),
         tip: this.text("lineHighlightTip", "VitePress style line ranges, for example 1,3-5"),
       },
-      countLines: spec => parseLineSpec(spec).reduce((total, range) => total + range.end - range.start + 1, 0),
-      formatCount: count => this.text("lineHighlightPreview", "{{count}} lines will be highlighted").replace("{{count}}", String(count)),
-      onPreview: spec => setPreview(codeBlock, spec),
+      countLines: (spec) => parseLineSpec(spec).reduce((total, range) => total + range.end - range.start + 1, 0),
+      formatCount: (count) =>
+        this.text("lineHighlightPreview", "{{count}} lines will be highlighted").replace("{{count}}", String(count)),
+      onPreview: (spec) => setPreview(codeBlock, spec),
       onEndPreview: () => endPreview(codeBlock),
-      onConfirm: spec => this.writeLineSpec(blockId, codeBlock, spec),
+      onConfirm: (spec) => this.writeLineSpec(blockId, codeBlock, spec),
       onClear: () => this.writeLineSpec(blockId, codeBlock, ""),
     });
   }
@@ -157,7 +158,6 @@ export default class CodeLineHighlight extends Plugin {
   }
 
   private persistSettings() {
-    this.saveData(STORAGE_NAME, this.settings)
-      .catch(error => console.warn("[lineglow] save settings failed", error));
+    this.saveData(STORAGE_NAME, this.settings).catch((error) => console.warn("[lineglow] save settings failed", error));
   }
 }
