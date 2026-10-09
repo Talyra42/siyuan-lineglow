@@ -1,10 +1,12 @@
 import type { Plugin } from "siyuan";
 import type { IPluginSettings } from "../settings";
-import { ATTR_LINES, ATTR_STYLE, CODE_BLOCK_SELECTOR } from "../constants";
+import { ATTR_LINES, ATTR_RENDER, ATTR_STYLE, CODE_BLOCK_SELECTOR } from "../constants";
 import { applyBlock, clearBlock, clearGutterRules, pruneGutterRules } from "./render";
 
 const SCAN_DEBOUNCE = 160;
 const BATCH_SIZE = 40;
+/** 一次快速渲染最多处理的代码块数量，超出部分退回防抖批量扫描，避免拖长首帧 */
+const FAST_BATCH_LIMIT = 60;
 
 let getSettings: () => IPluginSettings;
 let observer: MutationObserver | null = null;
@@ -27,6 +29,23 @@ const observed = new Set<HTMLElement>();
 const resized = new Set<HTMLElement>();
 /** 待处理的代码块 */
 const pending = new Set<HTMLElement>();
+/** 待在同一帧绘制前渲染的代码块 */
+const fastPending = new Set<HTMLElement>();
+let fastFrame = 0;
+
+/** 在下一帧绘制前执行回调，环境不支持 requestAnimationFrame 时退化为定时器 */
+const requestFrame = (callback: () => void): number =>
+  typeof window.requestAnimationFrame === "function"
+    ? window.requestAnimationFrame(callback)
+    : window.setTimeout(callback, 16);
+
+const cancelFrame = (handle: number) => {
+  if (typeof window.cancelAnimationFrame === "function") {
+    window.cancelAnimationFrame(handle);
+    return;
+  }
+  window.clearTimeout(handle);
+};
 
 const toElement = (node: Node | null): HTMLElement | null => {
   if (!node) {
@@ -47,7 +66,7 @@ const collectBlocks = (node: Node | null, into: Set<HTMLElement>) => {
   if (element.matches(CODE_BLOCK_SELECTOR)) {
     into.add(element);
   }
-  element.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR).forEach(block => into.add(block));
+  element.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR).forEach((block) => into.add(block));
   const ancestor = element.closest<HTMLElement>(CODE_BLOCK_SELECTOR);
   if (ancestor) {
     into.add(ancestor);
@@ -112,7 +131,7 @@ const runScan = () => {
   const settings = getSettings();
   const blocks = Array.from(document.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR));
   if (!settings.enabled) {
-    blocks.forEach(block => clearBlock(block));
+    blocks.forEach((block) => clearBlock(block));
     clearGutterRules();
     return;
   }
@@ -156,6 +175,42 @@ const schedule = (scope: "all" | "pending") => {
   }, SCAN_DEBOUNCE);
 };
 
+/**
+ * 在下一帧绘制前渲染。
+ * 打开文档时编辑器先同步插入内容，再在微任务里用 hljs 重建代码正文；
+ * 微任务先于 requestAnimationFrame 回调执行，因此这里测量到的已经是最终 DOM，
+ * 样式写入又仍落在同一帧的绘制之前，于是首帧就带着高亮，不再"先无高亮再弹出"。
+ */
+const flushFast = () => {
+  fastFrame = 0;
+  const blocks = [...fastPending];
+  fastPending.clear();
+  blocks.forEach(renderOne);
+};
+
+/** 把某个 protyle 内的代码块排进快速渲染，只处理它自己的子树 */
+const scheduleFast = (scope: Element) => {
+  const blocks = Array.from(scope.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR));
+  if (blocks.length === 0) {
+    return;
+  }
+  blocks.slice(0, FAST_BATCH_LIMIT).forEach((block) => fastPending.add(block));
+  if (blocks.length > FAST_BATCH_LIMIT) {
+    // 超大文档先保证首屏这批，其余交给防抖批量扫描
+    blocks.slice(FAST_BATCH_LIMIT).forEach((block) => pending.add(block));
+    schedule("pending");
+  }
+  if (!fastFrame) {
+    fastFrame = requestFrame(flushFast);
+  }
+};
+
+/** 取出 protyle 事件携带的容器，缺失时退回全量扫描 */
+const protyleScope = (event: unknown): Element | null => {
+  const detail = (event as CustomEvent<{ protyle?: { wysiwyg?: { element?: Element } } }> | undefined)?.detail;
+  return detail?.protyle?.wysiwyg?.element ?? null;
+};
+
 const onMutations = (mutations: MutationRecord[]) => {
   for (const mutation of mutations) {
     if (mutation.type === "attributes") {
@@ -163,7 +218,7 @@ const onMutations = (mutations: MutationRecord[]) => {
       continue;
     }
     collectBlocks(mutation.target, pending);
-    mutation.addedNodes.forEach(node => collectBlocks(node, pending));
+    mutation.addedNodes.forEach((node) => collectBlocks(node, pending));
   }
   if (pending.size > 200) {
     pending.clear();
@@ -175,7 +230,17 @@ const onMutations = (mutations: MutationRecord[]) => {
   }
 };
 
-const onProtyleEvent = () => schedule("all");
+const onProtyleEvent = (event: unknown) => {
+  const scope = protyleScope(event);
+  if (scope) {
+    scheduleFast(scope);
+    return;
+  }
+  schedule("all");
+};
+
+/** 文档关闭时全量重扫一次，顺带清理已经失效的行号规则 */
+const onProtyleDestroy = () => schedule("all");
 
 const onWindowResize = () => schedule("all");
 
@@ -191,14 +256,14 @@ export const initScanner = (plugin: Plugin, settingsGetter: () => IPluginSetting
   plugin.eventBus.on("loaded-protyle-dynamic", onProtyleEvent);
   plugin.eventBus.on("loaded-protyle-static", onProtyleEvent);
   plugin.eventBus.on("switch-protyle", onProtyleEvent);
-  plugin.eventBus.on("destroy-protyle", onProtyleEvent);
+  plugin.eventBus.on("destroy-protyle", onProtyleDestroy);
   observer = new MutationObserver(onMutations);
   observer.observe(document.body, {
     childList: true,
     subtree: true,
     characterData: true,
     attributes: true,
-    attributeFilter: [ATTR_LINES, ATTR_STYLE],
+    attributeFilter: [ATTR_LINES, ATTR_RENDER, ATTR_STYLE],
   });
   window.addEventListener("resize", onWindowResize);
   // 字体加载完成会改变行高，需要重新测量
@@ -229,7 +294,7 @@ export function destroyScanner(plugin: Plugin) {
   plugin.eventBus.off("loaded-protyle-dynamic", onProtyleEvent);
   plugin.eventBus.off("loaded-protyle-static", onProtyleEvent);
   plugin.eventBus.off("switch-protyle", onProtyleEvent);
-  plugin.eventBus.off("destroy-protyle", onProtyleEvent);
+  plugin.eventBus.off("destroy-protyle", onProtyleDestroy);
   window.removeEventListener("resize", onWindowResize);
   observer?.disconnect();
   observer = null;
@@ -237,13 +302,18 @@ export function destroyScanner(plugin: Plugin) {
   resizeObserver = null;
   window.clearTimeout(scanTimer);
   window.clearTimeout(resizeTimer);
+  if (fastFrame) {
+    cancelFrame(fastFrame);
+    fastFrame = 0;
+  }
   scanTimer = 0;
   resizeTimer = 0;
   pending.clear();
+  fastPending.clear();
   resized.clear();
   observed.clear();
   activePlugin = null;
   generation++;
-  document.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR).forEach(block => clearBlock(block));
+  document.querySelectorAll<HTMLElement>(CODE_BLOCK_SELECTOR).forEach((block) => clearBlock(block));
   clearGutterRules();
 }

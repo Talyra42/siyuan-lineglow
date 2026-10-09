@@ -27,8 +27,8 @@ const createPluginStub = () => {
         listeners.get(type)?.delete(listener);
       },
     },
-    emit(type: string) {
-      listeners.get(type)?.forEach(listener => listener({ detail: {} }));
+    emit(type: string, detail: Record<string, unknown> = {}) {
+      listeners.get(type)?.forEach((listener) => listener({ detail }));
     },
     listenerCount() {
       return [...listeners.values()].reduce((total, set) => total + set.size, 0);
@@ -96,6 +96,51 @@ describe("scanner", () => {
     expect(codeOf(plain).style.backgroundImage).toBe("");
     expect(gutterStyle()?.textContent).toContain(BLOCK_ID);
     expect(gutterStyle()?.textContent).not.toContain("20240101120000-hijklmn");
+  });
+
+  it("renders the loaded protyle before the debounce fires", async () => {
+    const { highlighted } = buildDom(` custom-code-hl="1,3-5"`);
+    const scope = document.querySelector<HTMLElement>(".protyle-wysiwyg")!;
+    vi.mocked(measureBands).mockClear();
+
+    plugin.emit("loaded-protyle-static", { protyle: { wysiwyg: { element: scope } } });
+    // 防抖定时器是 160ms，这里只推进一帧，验证渲染不依赖防抖
+    await vi.advanceTimersByTimeAsync(20);
+
+    expect(vi.mocked(measureBands).mock.calls.length).toBe(1);
+    expect(codeOf(highlighted).style.backgroundImage).not.toBe("");
+    expect(gutterStyle()?.textContent).toContain(BLOCK_ID);
+  });
+
+  it("only renders code blocks inside the protyle carried by the event", async () => {
+    const { highlighted } = buildDom(` custom-code-hl="1"`);
+    const scope = document.querySelector<HTMLElement>(".protyle-wysiwyg")!;
+    document.body.insertAdjacentHTML(
+      "beforeend",
+      `<div class="code-block" data-type="NodeCodeBlock"
+      data-node-id="20240101120000-outside" custom-code-hl="1"><div class="hljs">
+      <div contenteditable="true">const outside = 1;</div></div></div>`,
+    );
+    const outside = document.querySelector<HTMLElement>('.code-block[data-node-id="20240101120000-outside"]')!;
+
+    plugin.emit("loaded-protyle-static", { protyle: { wysiwyg: { element: scope } } });
+    await vi.advanceTimersByTimeAsync(20);
+
+    expect(codeOf(highlighted).style.backgroundImage).not.toBe("");
+    expect(codeOf(outside).style.backgroundImage).toBe("");
+  });
+
+  it("cancels the queued fast render when the scanner is destroyed", async () => {
+    const { highlighted } = buildDom(` custom-code-hl="1"`);
+    const scope = document.querySelector<HTMLElement>(".protyle-wysiwyg")!;
+    vi.mocked(measureBands).mockClear();
+
+    plugin.emit("loaded-protyle-static", { protyle: { wysiwyg: { element: scope } } });
+    destroyScanner(plugin as unknown as Plugin);
+    await vi.advanceTimersByTimeAsync(20);
+
+    expect(vi.mocked(measureBands).mock.calls.length).toBe(0);
+    expect(codeOf(highlighted).style.backgroundImage).toBe("");
   });
 
   it("re-renders when the attribute changes and clears when it is removed", async () => {
