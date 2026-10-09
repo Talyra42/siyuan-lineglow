@@ -1,5 +1,5 @@
 import { exec } from "node:child_process";
-import { readFileSync, writeFileSync } from "node:fs";
+import { existsSync, readFileSync, writeFileSync } from "node:fs";
 import { createRequire } from "node:module";
 import process from "node:process";
 import readline from "node:readline";
@@ -146,9 +146,32 @@ const main = async () => {
     writeFileSync("./package.json", packageUpdated, "utf8");
     console.log("✅  package.json updated");
 
+    const releaseFiles = ["./plugin.json", "./package.json"];
+    console.log("🔄  \x1B[90mUpdating CHANGELOG.md...\x1B[0m");
+    const changelogPath = "./CHANGELOG.md";
+    if (existsSync(changelogPath)) {
+      const changelog = readFileSync(changelogPath, "utf8");
+      const now = new Date();
+      const date = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
+      const eol = changelog.includes("\r\n") ? "\r\n" : "\n";
+      const archived = changelog.replace(
+        /^## \[Unreleased\][^\S\n]*$/m,
+        `## [Unreleased]${eol}${eol}## [${newVersion}] - ${date}`,
+      );
+      if (archived === changelog) {
+        console.log("⚠️  CHANGELOG.md 里没有 [Unreleased] 小节，已跳过");
+      } else {
+        writeFileSync(changelogPath, archived, "utf8");
+        releaseFiles.push(changelogPath);
+        console.log("✅  CHANGELOG.md updated");
+      }
+    } else {
+      console.log("⚠️  CHANGELOG.md 不存在，已跳过");
+    }
+
     console.log("🔄  \x1B[90m Ready to commit new version and create tag...\x1B[0m");
     exec(
-      `git add ./plugin.json ./package.json && git commit -m "chore: update version to ${newVersion}" && git push && git tag v${newVersion}`,
+      `git add ${releaseFiles.join(" ")} && git commit -m "chore: update version to ${newVersion}" && git push && git tag v${newVersion}`,
       (err, stdout) => {
         if (err) {
           console.error("\x1B[31m%s\x1B[0m", "❌  Error for adding and committing:", err);

@@ -52,6 +52,11 @@ export default defineConfig(({ mode }) => {
             dest: "./",
           },
           {
+            // 让包内 README 里的 [CHANGELOG.md](./CHANGELOG.md) 链接有效
+            src: "./CHANGELOG.md",
+            dest: "./",
+          },
+          {
             // 让包内 README 里的 [MIT](./LICENSE) 链接有效，同时满足 MIT 的署名随副本分发要求
             src: "./LICENSE",
             dest: "./",
