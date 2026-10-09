@@ -88,8 +88,8 @@ For example `custom-code-hl-style="num,no-bg"` keeps the line number coloring on
 **Why can't I write ` ```js {4-6} `?**
 Because SiYuan's parser truncates the fence info (see "Why this plugin" above). The fenced syntax is not "not supported yet" here — it simply cannot be stored.
 
-**Why is there no highlight in exported PDF / HTML / images?**
-Exports are produced by SiYuan outside of the plugin runtime, so plugins cannot take part. It is a known limitation; the block and its attribute are untouched, so editing, syncing and re-importing all keep working.
+**Which exports keep the highlight?**
+Exported images (`Export as image` and `Copy as PNG`) keep it, because those entries render the document inside the running app and the plugin styles the code blocks just like in the editor. Exported PDF and HTML are built as a standalone page that loads no plugin code, so they lose the highlight. This is a known limitation; the block and its attribute are untouched, so editing, syncing and re-importing all keep working.
 
 **Why don't the line numbers change color?**
 The line number coloring only shows when the code block displays line numbers. If it is off (block menu → `Line numbers`), you will only see the background.
