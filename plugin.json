@@ -2,7 +2,7 @@
   "name": "siyuan-lineglow",
   "author": "Talyra42",
   "url": "https://github.com/Talyra42/siyuan-lineglow",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "minAppVersion": "2.10.14",
   "disabledInPublish": false,
   "backends": ["all"],

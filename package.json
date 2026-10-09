@@ -1,7 +1,7 @@
 {
   "name": "siyuan-lineglow",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Highlight the specified lines of a code block in SiYuan, using the VitePress style line range syntax",
   "author": "Talyra42",
   "license": "MIT",
